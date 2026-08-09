@@ -79,7 +79,11 @@ Seja direto, objetivo e didático. Use linguagem acessível para um estudante de
         return NextResponse.json({ feedback: `❌ Chave do Gemini inválida ou expirada. Verifique em Configurações.\n\nDetalhe: ${errMsg}` })
       }
       if (data?.error?.code === 429) {
-        return NextResponse.json({ feedback: '❌ Limite de uso da sua chave Gemini atingido. Aguarde alguns minutos.' })
+        const msg = data?.error?.message ?? ''
+        if (msg.toLowerCase().includes('daily') || msg.toLowerCase().includes('quota')) {
+          return NextResponse.json({ feedback: `❌ Cota diária da sua chave Gemini esgotada. A cota gratuita reseta à meia-noite (horário do Google). Você pode criar uma chave em uma conta Google diferente para continuar hoje.\n\nDetalhe: ${msg}` })
+        }
+        return NextResponse.json({ feedback: `❌ Limite de requisições atingido. Aguarde 1 minuto e tente novamente.\n\nDetalhe: ${msg}` })
       }
       return NextResponse.json({ feedback: `❌ Erro na API do Gemini (${response.status}): ${errMsg}` })
     }
