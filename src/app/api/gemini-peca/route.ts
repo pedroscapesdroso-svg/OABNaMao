@@ -12,16 +12,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ feedback: 'Usuário não autenticado.' }, { status: 401 })
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('gemini_api_key')
     .eq('id', user.id)
     .single()
 
+  if (profileError) {
+    console.error('Profile error:', profileError)
+    return NextResponse.json({
+      feedback: '⚙️ Tabela "profiles" não encontrada no banco. Execute o arquivo supabase/schema_profiles.sql no Supabase SQL Editor.',
+    })
+  }
+
   const apiKey = profile?.gemini_api_key
   if (!apiKey) {
     return NextResponse.json({
-      feedback: '⚙️ Você ainda não configurou sua chave do Gemini. Vá em Configurações para adicionar sua chave gratuita do Google AI Studio.',
+      feedback: '⚙️ Você ainda não configurou sua chave do Gemini. Vá em Configurações (⚙️) para adicionar sua chave gratuita do Google AI Studio (aistudio.google.com).',
     })
   }
 
@@ -62,19 +69,25 @@ Seja direto, objetivo e didático. Use linguagem acessível para um estudante de
       }
     )
 
+    const data = await response.json()
+
     if (!response.ok) {
-      const err = await response.json()
-      if (err?.error?.status === 'INVALID_ARGUMENT') {
-        return NextResponse.json({ feedback: '❌ Chave do Gemini inválida. Verifique em Configurações.' })
+      const errMsg = data?.error?.message ?? JSON.stringify(data)
+      console.error('Gemini error:', response.status, errMsg)
+
+      if (data?.error?.status === 'INVALID_ARGUMENT' || data?.error?.code === 400) {
+        return NextResponse.json({ feedback: `❌ Chave do Gemini inválida ou expirada. Verifique em Configurações.\n\nDetalhe: ${errMsg}` })
       }
-      return NextResponse.json({ feedback: '❌ Erro na API do Gemini. Tente novamente.' })
+      if (data?.error?.code === 429) {
+        return NextResponse.json({ feedback: '❌ Limite de uso da sua chave Gemini atingido. Aguarde alguns minutos.' })
+      }
+      return NextResponse.json({ feedback: `❌ Erro na API do Gemini (${response.status}): ${errMsg}` })
     }
 
-    const data = await response.json()
     const feedback = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Não foi possível gerar feedback.'
-
     return NextResponse.json({ feedback })
-  } catch {
-    return NextResponse.json({ feedback: '❌ Erro ao conectar com o Gemini. Tente novamente.' }, { status: 500 })
+  } catch (err) {
+    console.error('Gemini fetch error:', err)
+    return NextResponse.json({ feedback: `❌ Erro de conexão com o Gemini: ${String(err)}` }, { status: 500 })
   }
 }
