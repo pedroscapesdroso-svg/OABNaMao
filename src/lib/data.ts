@@ -3,7 +3,7 @@ import { Questao } from './types'
 // Questões de exemplo para testar a plataforma antes de popular o banco
 export const questoesExemplo: Questao[] = [
   {
-    id: 'demo-1',
+    id: '00000000-0000-0000-0000-000000000001',
     ano: 2023,
     edicao: 'XXXVII',
     materia: 'Direito Civil',
@@ -16,7 +16,7 @@ export const questoesExemplo: Questao[] = [
     explicacao: 'Art. 2º do CC/2002: "A personalidade civil da pessoa começa do nascimento com vida; mas a lei põe a salvo, desde a concepção, os direitos do nascituro."'
   },
   {
-    id: 'demo-2',
+    id: '00000000-0000-0000-0000-000000000002',
     ano: 2023,
     edicao: 'XXXVII',
     materia: 'Direito Constitucional',
@@ -29,7 +29,7 @@ export const questoesExemplo: Questao[] = [
     explicacao: 'Art. 5º, LXI, CF/88: "ninguém será preso senão em flagrante delito ou por ordem escrita e fundamentada de autoridade judiciária competente."'
   },
   {
-    id: 'demo-3',
+    id: '00000000-0000-0000-0000-000000000003',
     ano: 2022,
     edicao: 'XXXVI',
     materia: 'Ética Profissional',
@@ -42,7 +42,7 @@ export const questoesExemplo: Questao[] = [
     explicacao: 'É vedado ao advogado assinar documentos nos quais não tenha participado efetivamente, pois isso configura falsidade ideológica e viola os princípios éticos da advocacia.'
   },
   {
-    id: 'demo-4',
+    id: '00000000-0000-0000-0000-000000000004',
     ano: 2022,
     edicao: 'XXXVI',
     materia: 'Direito Penal',
@@ -55,7 +55,7 @@ export const questoesExemplo: Questao[] = [
     explicacao: 'Art. 69 do CP: No concurso material (quando o agente, mediante mais de uma ação ou omissão, pratica dois ou mais crimes), as penas privativas de liberdade são somadas.'
   },
   {
-    id: 'demo-5',
+    id: '00000000-0000-0000-0000-000000000005',
     ano: 2021,
     edicao: 'XXXV',
     materia: 'Direito do Trabalho',

@@ -82,14 +82,18 @@ export default function SimuladoConteudo() {
     }).select().single()
 
     if (simulado) {
-      const respostasArr = questoes.map(q => ({
-        simulado_id: simulado.id,
-        user_id: user.id,
-        questao_id: q.id,
-        resposta_marcada: respostas[q.id] ?? null,
-        acertou: respostas[q.id] === q.resposta_correta,
-      }))
-      await supabase.from('respostas').insert(respostasArr)
+      // Só salva respostas se as questões vieram do banco (não são demo)
+      const questoesDoBanco = questoes.filter(q => !q.id.startsWith('00000000-0000-0000-0000-0000000000'))
+      if (questoesDoBanco.length > 0) {
+        const respostasArr = questoesDoBanco.map(q => ({
+          simulado_id: simulado.id,
+          user_id: user.id,
+          questao_id: q.id,
+          resposta_marcada: respostas[q.id] ?? null,
+          acertou: respostas[q.id] === q.resposta_correta,
+        }))
+        await supabase.from('respostas').insert(respostasArr)
+      }
       router.push(`/dashboard/resultado/${simulado.id}`)
     } else {
       // Fallback para questões demo (sem ID real no banco)
