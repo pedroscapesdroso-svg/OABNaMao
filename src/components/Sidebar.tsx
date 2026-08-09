@@ -10,6 +10,7 @@ const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: '📊' },
   { href: '/dashboard/simulado', label: '1ª Fase — Questões', icon: '📝' },
   { href: '/dashboard/segunda-fase', label: '2ª Fase — Peças', icon: '⚖️' },
+  { href: '/dashboard/historico-pecas', label: 'Minhas Peças', icon: '📄' },
   { href: '/dashboard/historico', label: 'Histórico', icon: '📋' },
   { href: '/dashboard/desempenho', label: 'Desempenho', icon: '📈' },
   { href: '/dashboard/configuracoes', label: 'Configurações', icon: '⚙️' },
